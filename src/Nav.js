@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Link} from '@reach/router';
 
 
 class Nav extends Component {
@@ -7,25 +8,25 @@ class Nav extends Component {
   }
 
   render(){
-    const { userID } = this.props;
+    const { userID, logoutUser } = this.props;
     return(
       <div className="">
         <nav className="navbar navbar-dark bg-dark">
-          <a className="navbar-brand" href="#">Navbar</a>
+          <Link className="navbar-brand" to="/">StartHere</Link>
           <ul className="nav justify-content-end ">
           {!userID && (
              <li className="nav-item">
-              <a className="nav-link text-light" href="#">Login</a>
+              <Link className="nav-link text-light" to="/login">Login</Link>
             </li>
             )}
           {!userID && (
              <li className="nav-item">
-              <a className="nav-link text-light" href="#">Signup</a>
+              <Link className="nav-link text-light" to="/signup">Signup</Link>
             </li>
             )}
          {userID && (
             <li className="nav-item">
-              <a className="nav-link text-light" href="#">Logout</a>
+              <a className="nav-link text-light" href="#" onClick={(e) => logoutUser(e)}>Logout</a>
             </li>
             )}
           </ul>

@@ -4,9 +4,11 @@ import firebase from './Firebase';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
-import logo from './logo.svg';
+
 import Nav from './Nav';
+import Home from './Home';
 import Signup from './Signup';
+import Login from './Login';
 
 class App extends Component {
 
@@ -16,6 +18,25 @@ class App extends Component {
       displayName: null, 
       userID: null,
     }
+
+  }
+
+  componentDidMount(){
+    firebase.auth().onAuthStateChanged(user => {
+      if (user){
+        this.setState({
+          displayName: user.displayName,
+          userID: user.uid
+        });
+      }
+      else{
+         this.setState({
+            displayName: null,
+            userID: null
+          });
+      }
+
+    });
 
   }
 
@@ -30,17 +51,30 @@ class App extends Component {
             displayName: displayName,
             userID: user.uid
           });
+          navigate('/');
         });
       }
+    });
+  }
+
+  logoutUser = e => {
+    e.preventDefault();
+    firebase.auth().signOut().then( ()=> {
+       navigate('/login');
+
+    }).catch((error) => {
+      // An error happened.
     });
   }
 
   render() {
     return (
       <div className="App">
-        <Nav userID={this.state.userID}/>
+        <Nav userID={this.state.userID} logoutUser={this.logoutUser}/>
         <Router>
-          <Signup path="/signup" user={this.state.userID} registerUser={this.registerUser}/>
+          <Home path="/" />
+          <Signup path="/signup" registerUser={this.registerUser}/>
+          <Login path="/login" />
         </Router>
       </div>
     );

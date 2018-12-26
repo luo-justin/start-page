@@ -1,19 +1,17 @@
 import React, {Component} from 'react';
 import FormError from './FormError';
 import firebase from './Firebase';
+import {navigate} from '@reach/router';
 
 
-
-class Signup extends Component{
+class Login extends Component{
   
   constructor(props){
     super(props);
     this.state = {
-      displayName: '',
       email: '',
-      passOne: '',
-      passTwo: '',
-      errorMessage: null,
+      password: '',
+      errorMessage: null
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -29,24 +27,16 @@ class Signup extends Component{
   handleSubmit(e){
     e.preventDefault();
     const state = this.state;
-    if(state.passOne !== state.passTwo){
-      this.setState({errorMessage: 'Passwords do not match'})
-    }
-    else if(state.passOne.length < 6){
-      this.setState({errorMessage: 'Password must be at least 6 characters long'})
-    }
-    else{
-      
-      this.setState({errorMessage: null});
-      var registrationInfo = {
-        displayName: state.displayName,
+
+    this.setState({errorMessage: null});
+      var loginInfo = {
         email: state.email,
-        password: state.passOne
+        password: state.password
       }
 
-      firebase.auth().createUserWithEmailAndPassword(registrationInfo.email, registrationInfo.password)
+      firebase.auth().signInWithEmailAndPassword(loginInfo.email, loginInfo.password)
       .then(() => {
-        this.props.registerUser(registrationInfo.displayName);
+        navigate('/');
       })
       .catch((error) => {
         var errorMessage = error.message;
@@ -56,10 +46,6 @@ class Signup extends Component{
         
       });
 
-
-
-    } 
-
   }
 
   render(){
@@ -67,28 +53,18 @@ class Signup extends Component{
       <form className="mt-5" onSubmit={this.handleSubmit}>
         <div className="container">
           <div className="card">
-            <h3 className="card-header">Signup</h3>
+            <h3 className="card-header">Login</h3>
             <div className="card-body">
                 {this.state.errorMessage && (<FormError errorMessage={this.state.errorMessage}/>) }
-                <div className="form-group">
-                  <label htmlFor="displayName">Display Name</label>
-                  <input type="text" className="form-control" id="displayName" aria-describedby="display name" 
-                           onChange={this.handleChange} required/>
-                </div>
                 <div className="form-group">
                   <label htmlFor="email">Email address</label>
                   <input type="email" className="form-control" id="email" aria-describedby="email" 
                          onChange={this.handleChange} required/>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="passOne">Password</label>
-                  <input type="password" className="form-control" id="passOne" 
+                  <label htmlFor="password">Password</label>
+                  <input type="password" className="form-control" id="password" 
                          onChange={this.handleChange} required/>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="passTwo">Password</label>
-                  <input type="password" className="form-control" id="passTwo" 
-                        onChange={this.handleChange} required/>
                 </div>
                 <button type="submit" className="btn btn-primary btn-lg float-right">Submit</button>
             </div>
@@ -100,4 +76,4 @@ class Signup extends Component{
   }
 }
 
-export default Signup;
+export default Login;
