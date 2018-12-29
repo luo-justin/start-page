@@ -9,9 +9,13 @@
     "jquery": "^3.3.1",
     "popper.js": "^1.14.6",
     "react": "^16.7.0",
+    "react-beautiful-dnd": "^10.0.3",
     "react-dom": "^16.7.0",
+    "react-edit-inline": "^1.0.8",
     "react-icons": "^3.2.2",
-    "react-scripts": "2.1.2"
+    "react-inline-editing": "^1.0.10",
+    "react-scripts": "2.1.2",
+    "riek": "^1.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
