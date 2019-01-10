@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TaskList from './TaskList';
 import firebase from './Firebase';
+import {DragDropContext} from 'react-beautiful-dnd';
 
 class Home extends Component{
 
@@ -39,34 +40,39 @@ class Home extends Component{
 
 	}
 
+	onDragEnd = result =>{
+
+	}
+
 
 	render(){
+
 		if(this.props.userID){
 			this.ref = this.db.collection("users").doc(this.props.userID).collection("taskList");
 		}
 		return(
-			<div className="container mt-5">
-			 <div class="row">
-				  <div class="col">
-						1 of 3
-				  </div>
-				  <div class="col">
-				   	<div class="card">
-							<div className="card-header">
-								<h4 className="">Task List</h4>
+			<DragDropContext onDragEnd={this.onDragEnd}>
+				<div className="container mt-5">
+					<div class="row">
+					  <div class="col">
+							1 of 3
+					  </div>
+					  <div class="col">
+					   	<div class="card">
+								<div className="card-header">
+									<h4 className="">Task List</h4>
+									<button type="button" class="btn btn-primary" onClick={(e)=>this.addTask(e) }>Add</button>
+								</div>
 							</div>
-
-						  <div class="card-body">
-						  		<button type="button" class="btn btn-primary" onClick={(e)=>this.addTask(e) }>Add</button>
-						  </div>
-						</div>
-				     <TaskList taskList={this.props.taskList} userID={this.props.userID}/>
-				   </div>
-				    <div class="col">
-				      3 of 3
-				    </div>
+					     		<TaskList taskList={this.props.taskList} userID={this.props.userID}/>
+					   </div>
+					    <div class="col">
+					      3 of 3
+					    </div>
+					</div>
 				</div>
-			</div>
+			</DragDropContext>
+
 			);
 
 	}

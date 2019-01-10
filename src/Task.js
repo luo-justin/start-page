@@ -1,5 +1,5 @@
 import React from 'react';
-
+import 'Task'
 
 export default class Task extends React.Component{
 	constructor(props){

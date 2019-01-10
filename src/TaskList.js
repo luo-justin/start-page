@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import firebase from './Firebase';
-
-
+import {Droppable} from 'react-beautiful-dnd';
+import {Draggable} from 'react-beautiful-dnd';
 
 function contentEditable(WrappedComponent) {
-
   return class extends React.Component {
 
     state = {
@@ -40,14 +39,12 @@ function contentEditable(WrappedComponent) {
         if (this.isValueChanged()) {
           console.log('Value is changed', this.domElm.textContent);
           console.log('Value is changed', this.props.userID);
-         	var timestamp = Math.floor(Date.now() / 1000);
 
         	const db = firebase.firestore();
           // Add a new document in collection "cities"
-					db.collection("users").doc(this.props.userID).collection("taskList").doc(this.domElm.id).set({
-					    content: this.domElm.textContent,
-					    timestamp: timestamp
-					})
+					db.collection("users").doc(this.props.userID).collection("taskList").doc(this.domElm.id).update	({
+					    content: this.domElm.textContent
+					   })
 					.then(function() {
 					    console.log("Document successfully written!");
 					})
@@ -106,12 +103,9 @@ function contentEditable(WrappedComponent) {
 
 
 class TaskList extends Component{
-
-
 	render(){
 		let EditableLi = contentEditable('li');
 		const myTaskList = this.props.taskList.map(task =>{
-			console.log(this.props.userID);
 			return(
 				<div key={task.taskID} >
 					<EditableLi id={task.taskID} className="list-group-item" value={task.content} userID={this.props.userID} style={{height: '49px'}}>
@@ -120,10 +114,29 @@ class TaskList extends Component{
 				);
 		});
 		return(
-			<ul className="list-group">
-				{myTaskList}
-			</ul>
-
+			<Droppable droppableId="1">
+				{(provided) =>(
+						<ul className="list-group" ref={provided.innerRef}
+							{...provided.droppableProps} 
+						 >
+						{this.props.taskList.map((task,index) =>
+							<Draggable draggableId={task.taskID} key={task.taskID} index={index}>
+							{(provided) =>(
+								<div 									 
+										{...provided.draggableProps}
+									 {...provided.dragHandleProps}
+									 ref={provided.innerRef}>
+									<EditableLi id={task.taskID} className="list-group-item" value={task.content} userID={this.props.userID} style={{height: '49px'}}
+									>
+								</EditableLi>
+								</div>
+								)}
+							
+							</Draggable>)}
+							{provided.placeholder}
+					</ul>
+				)}
+			</Droppable>
 			);
 
 	}
